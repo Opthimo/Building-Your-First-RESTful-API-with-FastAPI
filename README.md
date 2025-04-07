@@ -95,7 +95,7 @@ sudo apt install python3.12 python3.12-venv
    - Port `8000` is an arbitrary, non-privileged port commonly used for web development. It can be changed with the `--port` option.
 
 4. **Call a Hello World GET endpoint with curl**\
-   Once the server is running, you can send an HTTP GET request to your root endpoint using [`curl`](github.com/STEMgraph/missing):
+   Once the server is running, you can send an HTTP GET request to your root endpoint using [`cURL`](github.com/STEMgraph/e8add8e9-7a67-4b50-af89-6c1ce6558e0d):
 
    ```bash
    curl http://127.0.0.1:8000/
