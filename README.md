@@ -11,7 +11,7 @@
 
 ## Introduction
 
-**FastAPI** is a library for Python 3 that supports the construction of **RESTful APIs**—web services that communicate using standard HTTP methods. The library reduces boilerplate and encourages the use of Python’s type annotations and asynchronous programming model.
+**FastAPI** is a library for Python 3 that supports the construction of **RESTful APIs**—web services that communicate using standard [HTTP](github.com/STEMgraph/missing) methods. The library reduces boilerplate and encourages the use of Python’s type annotations and asynchronous programming model.
 
 In a FastAPI project, the central object is an instance of the `FastAPI` class, often named `app`. This object serves as the application runtime and receives HTTP requests from the network. A typical FastAPI program defines *endpoints* by associating Python functions with HTTP methods and paths. This association is established using decorators such as `@app.get("/")` or `@app.post("/item")`.
 
@@ -43,11 +43,20 @@ Client (Receives Response)
 
 
 ## Tasks
+0. **Ensure a proper `python3` Version**: Run `python3 --version` on your host-machine. If your version of python is older than **3.12** please consider upgrading with your package manager for this exercise:
+```bash
+sudo apt update
+sudo apt install python3.12 python3.12-venv
+```
 
 1. **Install FastAPI and Uvicorn**\
    To begin working with FastAPI, you need to install the necessary libraries using Python's package manager. FastAPI itself provides the framework, while Uvicorn is an ASGI server used to run the application.
+   Create a new project directory first, start a [virtual environment](https://github.com/STEMgraph/2d1d315d-bb92-48c0-b19f-19529a45e5ff), source it and install the libraries: 
 
    ```bash
+   mkdir ~/my_first_api && cd ~/my_first_api
+   python3.12 -m venv fastapi_environment
+   source ./fastapi_environment/bin/activate
    pip install fastapi uvicorn
    ```
 
@@ -75,8 +84,8 @@ Client (Receives Response)
 
    Here's what happens:
 
-   - `main` refers to the filename `main.py` (without the `.py` extension).
-   - `app` refers to the `FastAPI()` object defined in the script.
+   - `main` refers to the filename `main.py` (without the `.py` extension). If you called your file differently, you'll have to use the different name here as well.
+   - `app` refers to the `FastAPI()` object defined in the script. If you called your object differently, you'll have to use the different name here as well.
    - `--reload` enables automatic reloading of the server when the source code changes—this is useful during development but omitted when running in production.
 
    Uvicorn starts a lightweight web server that binds to the local address `127.0.0.1` and listens on port `8000` by default. This means the server can be accessed from your local machine using `http://127.0.0.1:8000`.
@@ -86,7 +95,7 @@ Client (Receives Response)
    - Port `8000` is an arbitrary, non-privileged port commonly used for web development. It can be changed with the `--port` option.
 
 4. **Call a Hello World GET endpoint with curl**\
-   Once the server is running, you can send an HTTP GET request to your root endpoint using `curl`:
+   Once the server is running, you can send an HTTP GET request to your root endpoint using [`curl`](github.com/STEMgraph/missing):
 
    ```bash
    curl http://127.0.0.1:8000/
