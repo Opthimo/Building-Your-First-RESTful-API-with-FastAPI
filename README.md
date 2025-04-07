@@ -1,51 +1,150 @@
 <!---
 {
-  "depends_on": [],
+  "depends_on": ["AND", "a0f6c77d-9645-4e6c-80dc-a80608786266", "2d1d315d-bb92-48c0-b19f-19529a45e5ff"],
   "author": "Stephan Bökelmann",
-  "first_used": "2025-03-17",
-  "keywords": ["learning", "exercises", "education", "practice"]
+  "first_used": "2025-04-07",
+  "keywords": ["python", "webtechnology", "REST", "FastAPI"]
 }
 --->
 
-# Learning Through Exercises
+# Building Your First RESTful API with FastAPI
 
-## 1) Introduction
-Learning by doing is one of the most effective methods to acquire new knowledge and skills. Rather than passively consuming information, actively engaging in problem-solving fosters deeper understanding and long-term retention. By working through structured exercises, students can grasp complex concepts in a more intuitive and applicable way. This approach is particularly beneficial in technical fields like programming, mathematics, and engineering.
+## Introduction
 
-### 1.1) Further Readings and Other Sources
-- [The Importance of Practice in Learning](https://www.sciencedirect.com/science/article/pii/S036013151300062X)
-- "The Art of Learning" by Josh Waitzkin
-- [How to Learn Effectively: 5 Key Strategies](https://www.edutopia.org/article/5-research-backed-learning-strategies)
+**FastAPI** is a library for Python 3 that supports the construction of **RESTful APIs**—web services that communicate using standard HTTP methods. The library reduces boilerplate and encourages the use of Python’s type annotations and asynchronous programming model.
 
-## 2) Tasks
-1. **Write a Summary**: Summarize the concept of "learning by doing" in 3-5 sentences.
-2. **Example Identification**: List three examples from your own experience where learning through exercises helped you understand a topic better.
-3. **Create an Exercise**: Design a simple exercise for a topic of your choice that someone else could use to practice.
-4. **Follow an Exercise**: Find an online tutorial that includes exercises and complete at least two of them.
-5. **Modify an Existing Exercise**: Take a basic problem from a textbook or online course and modify it to make it slightly more challenging.
-6. **Pair Learning**: Explain a concept to a partner and guide them through an exercise without giving direct answers.
-7. **Review Mistakes**: Look at an exercise you've previously completed incorrectly. Identify why the mistake happened and how to prevent it in the future.
-8. **Time Challenge**: Set a timer for 10 minutes and try to solve as many simple exercises as possible on a given topic.
-9. **Self-Assessment**: Create a checklist to evaluate your own performance in completing exercises effectively.
-10. **Reflect on Progress**: Write a short paragraph on how this structured approach to exercises has influenced your learning.
+In a FastAPI project, the central object is an instance of the `FastAPI` class, often named `app`. This object serves as the application runtime and receives HTTP requests from the network. A typical FastAPI program defines *endpoints* by associating Python functions with HTTP methods and paths. This association is established using decorators such as `@app.get("/")` or `@app.post("/item")`.
 
-<details>
-  <summary>Tip for Task 5</summary>
-  Try making small adjustments first, such as increasing the difficulty slightly or adding an extra constraint.
-</details>
+An **endpoint** in this context is a defined location (URI) in the web application that accepts requests using a specific HTTP method. For example, the combination of the path `/item` and the method `POST` defines a unique endpoint. The function attached to this endpoint is responsible for processing the request and producing a response.
 
-## 3) Questions
-1. What are the main benefits of learning through exercises compared to passive learning?
-2. How do exercises improve long-term retention?
-3. Can you think of a subject where learning through exercises might be less effective? Why?
-4. What role does feedback play in learning through exercises?
-5. How can self-designed exercises improve understanding?
-6. Why is it beneficial to review past mistakes in exercises?
-7. How does explaining a concept to someone else reinforce your own understanding?
-8. What strategies can you use to stay motivated when practicing with exercises?
-9. How can timed challenges contribute to learning efficiency?
-10. How do exercises help bridge the gap between theory and practical application?
+Internally, the FastAPI object conforms to the **ASGI** (Asynchronous Server Gateway Interface) specification. ASGI is the standard interface between Python web applications and web servers, supporting both synchronous and asynchronous communication.
 
-## 4) Advice
-Practice consistently and seek out diverse exercises that challenge different aspects of a topic. Combine exercises with reflection and feedback to maximize your learning efficiency. Don't hesitate to adapt exercises to fit your own needs and ensure that you're actively engaging with the material, rather than just going through the motions.
+Because FastAPI does not include a web server, we use an external ASGI-compatible server to run the application. In this tutorial, we use **Uvicorn**, a lightweight server based on `uvloop` and `httptools`. Uvicorn binds to a TCP/IP port, listens for incoming HTTP requests, parses them into ASGI messages, and passes them to the FastAPI application. The FastAPI app evaluates the request, dispatches it to the correct function (based on the method and path), and generates a response. This response is then returned to Uvicorn, which sends it back to the client.
+
+Other ASGI servers such as Daphne and Hypercorn are also available, but Uvicorn is commonly used with FastAPI due to its simplicity and efficiency.
+
+The following diagram outlines the flow of an HTTP request through the system:
+
+```
+Client (HTTP Request)
+        |
+        v
+Uvicorn (ASGI Server) -- parses HTTP, passes ASGI message -->
+        |
+        v
+FastAPI app (ASGI App) -- matches route, processes function -->
+        |
+        v
+Uvicorn (sends HTTP Response)
+        |
+        v
+Client (Receives Response)
+```
+
+
+## Tasks
+
+1. **Install FastAPI and Uvicorn**\
+   To begin working with FastAPI, you need to install the necessary libraries using Python's package manager. FastAPI itself provides the framework, while Uvicorn is an ASGI server used to run the application.
+
+   ```bash
+   pip install fastapi uvicorn
+   ```
+
+2. **Minimal construct of a FastAPI app**\
+   Create a file named `main.py` and add the following code:
+
+   ```python
+   from fastapi import FastAPI
+
+   app = FastAPI()
+
+   @app.get("/")
+   def read_root():
+       return {"message": "Hello World"}
+   ```
+
+   This script creates an `app` instance of the `FastAPI` class and defines a single route (`/`) that responds to HTTP GET requests. The route returns a JSON object with a simple greeting.
+
+3. **Start the FastAPI application using Uvicorn**\
+   Run the application with the following command:
+
+   ```bash
+   uvicorn main:app --reload
+   ```
+
+   Here's what happens:
+
+   - `main` refers to the filename `main.py` (without the `.py` extension).
+   - `app` refers to the `FastAPI()` object defined in the script.
+   - `--reload` enables automatic reloading of the server when the source code changes—this is useful during development but omitted when running in production.
+
+   Uvicorn starts a lightweight web server that binds to the local address `127.0.0.1` and listens on port `8000` by default. This means the server can be accessed from your local machine using `http://127.0.0.1:8000`.
+
+   - `127.0.0.1` is the loopback interface, i.e., the network interface of your own machine. It restricts access to local connections only.
+   - If you used `0.0.0.0` instead, the server would accept requests from all network interfaces, including remote machines (not recommended for development).
+   - Port `8000` is an arbitrary, non-privileged port commonly used for web development. It can be changed with the `--port` option.
+
+4. **Call a Hello World GET endpoint with curl**\
+   Once the server is running, you can send an HTTP GET request to your root endpoint using `curl`:
+
+   ```bash
+   curl http://127.0.0.1:8000/
+   ```
+
+   This sends a request to the FastAPI app, which responds with the JSON object `{"message": "Hello World"}`.
+
+5. **Create and call a Hello {name} POST endpoint with curl**\
+   Extend your `main.py` with the following code:
+
+   ```python
+   from pydantic import BaseModel
+
+   class NameRequest(BaseModel):
+       name: str
+
+   @app.post("/hello")
+   def greet_name(request: NameRequest):
+       return {"message": f"Hello, {request.name}"}
+   ```
+
+   This defines a POST endpoint `/hello` that accepts a JSON payload with a `name` field. The `BaseModel` from Pydantic automatically validates the incoming data.
+
+   Test it using:
+
+   ```bash
+   curl -X POST http://127.0.0.1:8000/hello \
+        -H "Content-Type: application/json" \
+        -d '{"name": "Alice"}'
+   ```
+
+   The response will be:
+
+   ```json
+   {"message": "Hello, Alice"}
+   ```
+
+6. **Open the /docs route in a browser**\
+   FastAPI automatically provides an interactive API documentation interface based on the OpenAPI specification. Navigate to:
+
+   ```
+   http://127.0.0.1:8000/docs
+   ```
+
+   This interface lets you test your API by filling out forms and submitting requests directly from the browser.
+
+
+## Questions
+
+1. What is the purpose of the `FastAPI()` object?
+2. What protocol does a webserver use to call a FastAPI route?
+3. Why is an external server like Uvicorn necessary?
+
+## Advice
+
+- Use `--reload` during development to automatically restart the server on code changes.
+- Keep endpoints small and focused—one function should handle one route.
+- Validate incoming data using Pydantic models to avoid manual parsing.
+- Start with `curl` for simple testing, then progress to writing automated tests.
+- Use the interactive docs (`/docs`) to experiment with your API without writing test scripts.
 
