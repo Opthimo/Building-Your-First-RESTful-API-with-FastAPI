@@ -146,8 +146,18 @@ sudo apt install python3.12 python3.12-venv
 ## Questions
 
 1. What is the purpose of the `FastAPI()` object?
+
+Creates the main application instance that defines routes, handles requests, 
+and manages the web application's configuration and middleware.
+
 2. What protocol does a webserver use to call a FastAPI route?
+
+HTTP - the standard web communication protocol for sending requests and receiving responses.
+
 3. Why is an external server like Uvicorn necessary?
+
+FastAPI is a framework, not a server. Uvicorn is an ASGI server that actually runs the application, 
+handles network connections, and serves HTTP requests to your FastAPI app.
 
 ## Advice
 
